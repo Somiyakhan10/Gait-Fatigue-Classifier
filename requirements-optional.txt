@@ -1,0 +1,3 @@
+# Optional extras. If these fail to install, the project still runs (they are skipped with a message).
+xgboost
+shap

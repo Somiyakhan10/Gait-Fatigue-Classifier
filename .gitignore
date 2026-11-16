@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.key
+data/downloads/
+data/tmp/
+data/private/
+results_export.zip
+output/real/

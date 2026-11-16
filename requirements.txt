@@ -1,0 +1,12 @@
+numpy
+scipy
+pandas
+scikit-learn
+matplotlib
+pyyaml
+requests
+tqdm
+joblib
+tabulate
+cryptography
+pytest
