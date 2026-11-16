@@ -20,19 +20,19 @@ The project downloads the data itself, processes it in a temporary folder, keeps
 *Note: The visual results below are generated using the real **DUO-GAIT** dataset (fatigued vs. rested walking).*
 
 ### 1. Terminal Execution
-![Terminal Output](result/terminal_output.png)
+![Terminal Output](docs/images/terminal_output.png)
 *The pipeline successfully running in VS Code, showing model training and evaluation.*
 
 ### 2. Model Comparison (AUC)
-![Model Comparison](result/model_comparison_auc.png)
+![Model Comparison](docs/images/model_comparison_auc.png)
 *Comparison of Area Under the Curve (AUC) across Conventional, Nonlinear, and Hybrid feature sets. Hybrid models show robust performance.*
 
 ### 3. Participant-Level Accuracy
-![Participant Accuracy](result/participant_level_accuracy.png)
+![Participant Accuracy](docs/images/participant_level_accuracy.png)
 *Held-out accuracy for each individual participant using Leave-One-Subject-Out (LOSO) validation to prevent data leakage.*
 
 ### 4. Feature Importance
-![Feature Importance](result/feature_importance.png)
+![Feature Importance](docs/images/feature_importance.png)
 *Which biomechanical features drove the machine learning predictions. This highlights the contribution of nonlinear metrics.*
 
 ---
