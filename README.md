@@ -20,19 +20,19 @@ The project downloads the data itself, processes it in a temporary folder, keeps
 *The figures below come from the real **DUO-GAIT** dataset (fatigued vs. rested walking, 16 healthy adults). The main finding is a negative one: no feature set separated the two conditions reliably.*
 
 ### 1. Feature Distributions
-![Feature distributions](result/feature_distributions.png)
+![Feature distributions](docs/images/feature_distributions.png)
 *Feature values for fatigued and rested windows overlap almost completely.*
 
 ### 2. Model Comparison (AUC)
-![Model Comparison](result/model_comparison_auc.png)
+![Model Comparison](docs/images/model_comparison_auc.png)
 *Leave-one-subject-out AUC for each model on conventional, nonlinear and hybrid features. Every result stays close to the 0.5 chance line (dashed), so no feature set separates fatigued from rested walking reliably.*
 
 ### 3. Participant-Level Accuracy
-![Participant Accuracy](result/participant_level_accuracy.png)
+![Participant Accuracy](docs/images/participant_level_accuracy.png)
 *Held-out accuracy for each participant (SVM, hybrid features). Results scatter around the 0.5 chance line, from 0.40 to 0.69.*
 
 ### 4. Feature Importance
-![Feature Importance](result/feature_importance.png)
+![Feature Importance](docs/images/feature_importance.png)
 *Permutation importance for the hybrid Random Forest. Values are tiny (about 0.003 change in accuracy) and mostly negative, so no feature is a reliable driver of the predictions.*
 
 ---
