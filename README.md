@@ -20,7 +20,8 @@ The project downloads the data itself, processes it in a temporary folder, keeps
 *The figures below come from the real **DUO-GAIT** dataset (fatigued vs. rested walking, 16 healthy adults). The main finding is a negative one: no feature set separated the two conditions reliably.*
 
 ### 1. Feature Distributions
-![Feature distributions](result/Feature_distributions.png)
+<img width="1095" height="314" alt="image" src="https://github.com/user-attachments/assets/cfbda8cb-a673-4785-ba1b-d46892a38a05" />
+
 *Feature values for fatigued and rested windows overlap almost completely.*
 
 ### 2. Model Comparison (AUC)
