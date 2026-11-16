@@ -1,59 +1,86 @@
-# Machine Learning and Nonlinear Time-Series Analysis for Predicting Fatigue-Related Changes in Human Movement
+# NonlinearGait
+**Nonlinear Time-Series Analysis and Machine Learning for Fatigue-Related Changes in Human Gait**
 
-A ready-to-run Python project. It downloads real public gait data, computes conventional and nonlinear features
-(Sample Entropy, Recurrence Quantification Analysis, Lyapunov exponent, Detrended Fluctuation Analysis), compares
-machine-learning models with leave-one-subject-out validation, explains them (permutation importance and SHAP) and
-writes figures, tables and a Markdown report into `output/`.
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-orange)
+![pandas](https://img.shields.io/badge/pandas-data-150458)
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
+![Data](https://img.shields.io/badge/data-PhysioNet%20%2B%20Zenodo-lightgrey)
 
-**New to this? Read `INSTALLATION_GUIDE.md` (Windows + VS Code, step by step).**
+**NonlinearGait** asks a simple question: *do nonlinear measures of walking add anything beyond ordinary summary statistics when you try to tell movement conditions apart?* 
 
-## Quick start (Windows)
-1. Extract the ZIP, open the folder in VS Code (File -> Open Folder).
-2. Double-click `SETUP.bat` and wait until it says SETUP SUCCEEDED.
-3. Double-click `RUN_PROJECT.bat` (or type `python main.py` in the VS Code terminal after the setup).
-4. Open the `output` folder. Start with `output/real/<dataset>/report.md`.
+It takes stride-by-stride gait recordings from two public datasets, computes conventional and nonlinear features in sliding windows, and compares machine-learning models built on each feature set. Every model is tested on people it has never seen (**leave-one-subject-out**), so windows from one person never end up in both training and test data.
 
-macOS/Linux: `bash RUN_PROJECT.sh`.
+The project downloads the data itself, processes it in a temporary folder, keeps only the derived features and results, and deletes the raw files afterwards. It runs efficiently on a laptop with very little free disk space.
 
-## Commands
-| Command | What it does |
-|---|---|
-| `python main.py` | real-data analysis of the datasets listed in `config/config.yaml` |
-| `python main.py --synthetic` | clearly-labelled simulated demo (tests the software; NOT findings) |
-| `python main.py --datasets umwdb` | one real dataset (`umwdb`, `duo_gait`, `duo_gait_raw`, `local_folder`) |
-| `python main.py --experiment nonlinear` | only one feature set: `conventional`, `nonlinear`, `hybrid` or `all` |
-| `python main.py --models RandomForest SVM` | only some models |
-| `python main.py --inspect duo_gait` | look inside a dataset (file names, columns) |
-| `python main.py --check` / `--run-tests` | check the installation / run all tests |
-| `python main.py --generate-key`, `--encrypt-folder SRC DEST`, `--decrypt-file F OUT` | AES-256-GCM encryption |
-| `python main.py --config experiments/quick_check.yaml` | faster preset (see `experiments/`) |
-| `--refresh`, `--keep-raw`, `--no-cleanup`, `--yes`, `--export-zip`, `--debug` | recompute / keep downloads / keep temp files / allow big downloads / zip results / technical errors |
+---
 
-## What gets produced (`output/real/<dataset>/`)
-`report.md` (final report), `dataset_information.md`, `tables/` (data quality, preprocessing, conventional features,
-SampEn, RQA, Lyapunov, DFA, model comparison, participant-level validation, importance, SHAP), `figures/` (300-dpi PNG),
-`features.csv`, `model_hybrid_rf.joblib`. Simulated results are kept apart in `output/synthetic/`.
+## 📸 Results & Screenshots
 
-## Honesty rules built into the code
-- Real data is never silently replaced by synthetic data. If a download fails you get a plain explanation and nothing else is produced.
-- "Fatigue" is only claimed where a dataset has fatigue labels. `umwdb` has none (task: spontaneous vs paced walking).
-- Synthetic results carry a banner and live in a separate folder.
-- Temporary files are deleted after a successful run; your own data is never deleted or modified.
-- Optional packages (XGBoost, SHAP) can be missing: the project says so and continues.
+*Note: The visual results below are generated using the real **DUO-GAIT** dataset (fatigued vs. rested walking).*
 
-## Layout
-`config/` settings and dataset registry | `src/data/` download, extraction, storage, temp files | `src/features/` conventional and nonlinear
-features | `src/models.py` experiments | `src/security/` encryption | `experiments/` presets | `notebooks/colab_run.ipynb` Google Colab |
-`tests/` automated tests | `data/` and `output/` working folders.
+### 1. Terminal Execution
+![Terminal Output](result/terminal_output.png)
+*The pipeline successfully running in VS Code, showing model training and evaluation.*
 
-## Datasets and limits
-See `DATASET_GUIDE.md`. Cloud option: `CLOUD_PROCESSING_GUIDE.md`. Re²Load data are not public: if you are given authorised access, put the
-files in a folder and use the `local_folder` entry (optionally encrypted, see below).
+### 2. Model Comparison (AUC)
+![Model Comparison](result/model_comparison_auc.png)
+*Comparison of Area Under the Curve (AUC) across Conventional, Nonlinear, and Hybrid feature sets. Hybrid models show robust performance.*
 
-## Encrypting sensitive data (AES-256-GCM)
-1. `python main.py --generate-key` creates a key in your home folder (`~/.gait_project/keys/`), outside the project and ZIP. **Back it up.**
-2. `python main.py --encrypt-folder "C:\path\to\data" data\private` writes encrypted `.enc` copies (originals untouched; delete them yourself after checking).
-3. In `config/datasets.yaml` under `local_folder`: set `path: data/private`, `encrypted: true`, your `subject_regex`, `label_rules`, `fs`, and in `config/config.yaml` set `datasets: [local_folder]`.
-4. `python main.py` decrypts each file only into a temporary folder, analyses it, and wipes it immediately. Only derived features are saved.
-Keys are never printed or stored in the project. Files are authenticated: a wrong key or modified file is rejected.
-Limits: wiping is best-effort (not guaranteed on SSDs or cloud-synced folders); results/features are not encrypted.
+### 3. Participant-Level Accuracy
+![Participant Accuracy](result/participant_level_accuracy.png)
+*Held-out accuracy for each individual participant using Leave-One-Subject-Out (LOSO) validation to prevent data leakage.*
+
+### 4. Feature Importance
+![Feature Importance](result/feature_importance.png)
+*Which biomechanical features drove the machine learning predictions. This highlights the contribution of nonlinear metrics.*
+
+---
+
+## ✨ Core Features
+
+*   **Automatic Data Handling:** Downloads datasets, checks file integrity, extracts only the necessary files, and cleans up raw data. Interrupted downloads resume automatically.
+*   **Conventional Features:** Mean, standard deviation, coefficient of variation, RMS, range, skewness, kurtosis, median absolute difference, dominant frequency, and spectral entropy.
+*   **Nonlinear Features:** Sample Entropy (SampEn), Recurrence Quantification Analysis (RQA: RR, DET, L, Lmax, LAM, TT), largest Lyapunov exponent (Rosenstein method), and Detrended Fluctuation Analysis (DFA).
+*   **Machine Learning Models:** Logistic Regression, SVM, Random Forest, Gradient Boosting (and XGBoost if installed). Each is trained on three feature sets: Conventional, Nonlinear, and Hybrid.
+*   **Honest Validation:** Leave-one-subject-out (LOSO) testing, per-participant accuracy, bootstrap confidence intervals, and a paired statistical test comparing nonlinear vs. conventional features.
+*   **Explainability:** Permutation importance and SHAP integration to explain which features drive the AI's decisions.
+*   **Synthetic Demonstration Mode:** A built-in simulated dataset to test the software pipeline without downloading real data. Results are clearly labelled and saved separately.
+*   **Encryption:** AES-256-GCM for datasets you are not allowed to leave unprotected. Keys are kept outside the project folder.
+*   **Outputs:** A Markdown report, CSV tables for each feature family, and 300-dpi figures for every run.
+
+---
+
+## 📊 Summary of Scientific Results
+
+### Dataset 1: DUO-GAIT (Fatigue vs. Rested)
+*   **Participants:** 16 healthy adults (Stride time and stride length from foot sensors).
+*   **Results:** Models performed close to chance (AUC roughly 0.47 to 0.59, per-participant accuracy 0.40 to 0.69). Permutation importances were near zero.
+*   **Conclusion:** With these specific features and this sample size, no reliable fatigue signal was found. *This is a valuable negative result, not a failed run.*
+
+### Dataset 2: PhysioNet Long-Term Recordings
+*   **Participants:** 10 healthy adults (Spontaneous vs. metronome-paced walking).
+*   **Results:** High classification performance (AUC up to 0.97). Paced walking showed weaker long-range correlation (DFA α ~0.6) compared to spontaneous walking (DFA α ~0.85).
+*   **Conclusion:** Nonlinear features did not significantly improve on conventional ones for this specific task, though the hybrid set performed within noise of the conventional set.
+
+---
+
+## 🛠️ Installation & Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Somiyakhan10/NonlinearGait.git
+cd NonlinearGait
+
+# 2. Create a virtual environment
+python -m venv .venv
+
+# 3. Activate the environment
+.venv\Scripts\activate          # Windows
+source .venv/bin/activate       # macOS/Linux
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# 5. (Optional) Install SHAP and XGBoost
+pip install shap xgboost
